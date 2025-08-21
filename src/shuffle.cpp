@@ -58,11 +58,11 @@ auto& cfg = Config::get();
             }
         } else {
             uint64_t inc = 1;
-            conns[0]->fetch_add_sync(&inc, 1, sync_offset);
+            conns[0]->fetch_add(&inc, 1, sync_offset);
 
             uint64_t observed;
             do {
-                conns[0]->read_sync(&observed, 8, sync_offset);
+                conns[0]->read(&observed, 8, sync_offset);
                 if (observed < target_value) {
                     std::this_thread::yield();
                 }
@@ -81,7 +81,7 @@ auto& cfg = Config::get();
             sizes[cfg.my_id] = my_size;
         } else {
             size_t write_pos = sizes_offset + cfg.my_id * 8;
-            conns[dest]->write_sync(&my_size, 8, write_pos);
+            conns[dest]->write(&my_size, 8, write_pos);
         }
     }
 
@@ -98,7 +98,7 @@ auto& cfg = Config::get();
     for (uint32_t dest = 0; dest < cfg.num_nodes; ++dest) {
         if (dest != cfg.my_id && !partitions[dest].empty()) {
             size_t nbytes = partitions[dest].size() * sizeof(Row);
-            conns[dest]->write_sync(partitions[dest].data(), nbytes, recv_pos[cfg.my_id]);
+            conns[dest]->write(partitions[dest].data(), nbytes, recv_pos[cfg.my_id]);
         }
     }
 
