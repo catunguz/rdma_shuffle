@@ -29,7 +29,7 @@ std::span<Row> Shuffle::run() {
     if (cfg.my_id == 0) {
         uint64_t zero = 0;
         connections[0]->write(&zero, sizeof(zero), barrier_offset);
-        std::this_thread::sleep_for(std::chrono::milliseconds(5)); // Wait for initialization
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -132,3 +132,4 @@ std::span<Row> Shuffle::run() {
     //throw std::runtime_error("not implemented");
     //return std::span<Row>();
 }
+
